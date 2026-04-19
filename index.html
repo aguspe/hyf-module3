@@ -1129,6 +1129,14 @@ const EX8_ANS = [
 ];
 
 function checkEx8() {
+  const missingRows = [];
+  for (let i = 1; i <= 6; i++) {
+    if (!document.getElementById('ex8s' + i).value || !document.getElementById('ex8p' + i).value) missingRows.push(i);
+  }
+  if (missingRows.length) {
+    showFP('ex8','fp-warn',`<h4>⚠️ Please fill in both Severity and Priority for all 6 rows before submitting.</h4><p style="font-size:.85rem">Rows incomplete: ${missingRows.join(', ')}.</p>`);
+    return;
+  }
   const labels = [
     'Place Order 500 error',
     'Logo alt text',
@@ -1175,6 +1183,12 @@ const EX9_EXP = {
 };
 
 function checkEx9() {
+  const missing = Object.keys(EX9_ANS).filter(qid => !document.getElementById(qid).value);
+  if (missing.length) {
+    missing.forEach(qid => document.getElementById('ex9-q' + qid.slice(-1)).classList.add('bad'));
+    showFP('ex9','fp-warn',`<h4>⚠️ Please answer all 6 questions before submitting.</h4><p style="font-size:.85rem">${missing.length} question${missing.length>1?'s':''} still unanswered — highlighted above.</p>`);
+    return;
+  }
   let correct = 0;
   Object.keys(EX9_ANS).forEach(qid => {
     const n = qid.slice(-1);
@@ -1390,6 +1404,12 @@ const EX1 = [
 ];
 
 function checkEx1() {
+  const unanswered = EX1.filter(q => !document.querySelector(`input[name="${q.name}"]:checked`));
+  if (unanswered.length) {
+    unanswered.forEach(q => document.getElementById(q.id).classList.add('bad'));
+    showFP('ex1','fp-warn',`<h4>⚠️ Please answer all ${EX1.length} questions before submitting.</h4><p style="font-size:.85rem">${unanswered.length} question${unanswered.length>1?'s':''} still unanswered — highlighted above.</p>`);
+    return;
+  }
   let correct = 0;
   EX1.forEach(q => {
     const sel = document.querySelector(`input[name="${q.name}"]:checked`);
@@ -1441,6 +1461,12 @@ const EX2_EXP = {
 };
 
 function checkEx2() {
+  const missing = Object.keys(EX2_ANS).filter(qid => !document.getElementById(qid).value);
+  if (missing.length) {
+    missing.forEach(qid => document.getElementById('ex2-q' + qid.slice(-1)).classList.add('bad'));
+    showFP('ex2','fp-warn',`<h4>⚠️ Please answer all 6 questions before submitting.</h4><p style="font-size:.85rem">${missing.length} question${missing.length>1?'s':''} still unanswered — highlighted above.</p>`);
+    return;
+  }
   let correct = 0;
   Object.keys(EX2_ANS).forEach(qid => {
     const n = qid.slice(-1);
@@ -1498,6 +1524,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function checkEx3() {
+  const incompleteRows = [];
+  for (let i = 1; i <= 6; i++) {
+    const l = document.querySelector(`.risk-l[data-row="${i}"]`).value;
+    const imp = document.querySelector(`.risk-i[data-row="${i}"]`).value;
+    const pri = document.getElementById('pri' + i).value;
+    if (!l || !imp || !pri) incompleteRows.push(i);
+  }
+  if (incompleteRows.length) {
+    showFP('ex3','fp-warn',`<h4>⚠️ Please complete all rows before submitting.</h4><p style="font-size:.85rem">Rows missing data: ${incompleteRows.join(', ')}. Fill in Likelihood, Impact, and Priority for every row.</p>`);
+    return;
+  }
   const names = ['Payment crashes','Profile pic wrong','Admin no auth','Search SLA','Password reset expiry','Banner on Safari'];
   let rows = '';
   EX3_SUGGESTED.forEach((s, i) => {
@@ -1541,6 +1578,12 @@ const EX4_EXP = {
 };
 
 function checkEx4() {
+  const missing = Object.keys(EX4_ANS).filter(qid => !document.getElementById(qid).value);
+  if (missing.length) {
+    missing.forEach(qid => document.getElementById('ex4-q' + qid.slice(-1)).classList.add('bad'));
+    showFP('ex4','fp-warn',`<h4>⚠️ Please answer all 8 questions before submitting.</h4><p style="font-size:.85rem">${missing.length} question${missing.length>1?'s':''} still unanswered — highlighted above.</p>`);
+    return;
+  }
   let correct = 0;
   Object.keys(EX4_ANS).forEach(qid => {
     const n = qid.slice(-1);
@@ -1602,6 +1645,16 @@ function buildRaciTable() {
 }
 
 function checkEx5() {
+  const emptyCells = [];
+  RACI_TASKS.forEach((_, ti) => {
+    RACI_ROLE_IDS.forEach(rid => {
+      if (!document.getElementById(`raci_t${ti}_${rid}`).value) emptyCells.push(`row ${ti+1}`);
+    });
+  });
+  if (emptyCells.length) {
+    showFP('ex5','fp-warn',`<h4>⚠️ Please fill in all ${RACI_TASKS.length * RACI_ROLE_IDS.length} cells before submitting.</h4><p style="font-size:.85rem">${emptyCells.length} cell${emptyCells.length>1?'s':''} still empty. Assign R, A, C, or I to every role for every task.</p>`);
+    return;
+  }
   let errors = [], valid = true;
   RACI_TASKS.forEach((task, ti) => {
     let aCount = 0, rCount = 0;

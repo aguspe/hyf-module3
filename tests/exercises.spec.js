@@ -6,11 +6,9 @@ test.beforeEach(async ({ page }) => {
 
 // ── Exercise 1: Plan vs Strategy ─────────────────────────────────────────────
 test.describe('Exercise 1 — Plan vs Strategy', () => {
-  test('shows warning when nothing selected', async ({ page }) => {
-    await page.click('button:has-text("Submit"):near(#ex1)');
-    // Should show feedback with 0/8 or still show without crashing
-    const fp = page.locator('#ex1-fp');
-    await expect(fp).toBeVisible();
+  test('shows warning when not all questions answered', async ({ page }) => {
+    await page.locator('#ex1 button.btn-submit').click();
+    await expect(page.locator('#ex1-fp')).toContainText('Please answer all');
   });
 
   test('perfect score: all 8 correct answers', async ({ page }) => {
@@ -24,8 +22,9 @@ test.describe('Exercise 1 — Plan vs Strategy', () => {
   });
 
   test('wrong answer shows inline explanation', async ({ page }) => {
-    // Q1 correct is S, select P (wrong)
-    await page.locator('input[name="ex1q1"][value="P"]').check();
+    // All answered but Q1 is wrong (correct=S, selecting P)
+    const answers = { ex1q1: 'P', ex1q2: 'P', ex1q3: 'S', ex1q4: 'P', ex1q5: 'S', ex1q6: 'P', ex1q7: 'S', ex1q8: 'P' };
+    for (const [name, val] of Object.entries(answers)) await page.locator(`input[name="${name}"][value="${val}"]`).check();
     await page.locator('#ex1 button.btn-submit').click();
     const expl = page.locator('#ex1-q1 .q-expl');
     await expect(expl).toBeVisible();
@@ -34,15 +33,15 @@ test.describe('Exercise 1 — Plan vs Strategy', () => {
   });
 
   test('correct answer shows green explanation', async ({ page }) => {
-    await page.locator('input[name="ex1q1"][value="S"]').check();
+    const answers = { ex1q1: 'S', ex1q2: 'P', ex1q3: 'S', ex1q4: 'P', ex1q5: 'S', ex1q6: 'P', ex1q7: 'S', ex1q8: 'P' };
+    for (const [name, val] of Object.entries(answers)) await page.locator(`input[name="${name}"][value="${val}"]`).check();
     await page.locator('#ex1 button.btn-submit').click();
-    const expl = page.locator('#ex1-q1 .q-expl');
-    await expect(expl).toBeVisible();
-    await expect(expl).toHaveClass(/ok/);
+    await expect(page.locator('#ex1-q1 .q-expl')).toHaveClass(/ok/);
   });
 
   test('reset clears selections and explanations', async ({ page }) => {
-    await page.locator('input[name="ex1q1"][value="S"]').check();
+    const answers = { ex1q1: 'S', ex1q2: 'P', ex1q3: 'S', ex1q4: 'P', ex1q5: 'S', ex1q6: 'P', ex1q7: 'S', ex1q8: 'P' };
+    for (const [name, val] of Object.entries(answers)) await page.locator(`input[name="${name}"][value="${val}"]`).check();
     await page.locator('#ex1 button.btn-submit').click();
     await expect(page.locator('#ex1-q1 .q-expl')).toBeVisible();
     await page.locator('#ex1 button.btn-reset').click();
@@ -63,8 +62,14 @@ test.describe('Exercise 2 — Test Levels', () => {
     await expect(page.locator('#ex2-badge')).toContainText('6/6');
   });
 
+  test('shows warning when not all questions answered', async ({ page }) => {
+    await page.locator('#ex2 button.btn-submit').click();
+    await expect(page.locator('#ex2-fp')).toContainText('Please answer all');
+  });
+
   test('wrong answer shows inline explanation', async ({ page }) => {
-    await page.locator('#ex2q1').selectOption('System'); // wrong (correct: Unit)
+    const answers = { ex2q1: 'System', ex2q2: 'Integration', ex2q3: 'System', ex2q4: 'Acceptance (UAT)', ex2q5: 'Integration', ex2q6: 'Unit' };
+    for (const [id, val] of Object.entries(answers)) await page.locator(`#${id}`).selectOption(val);
     await page.locator('#ex2 button.btn-submit').click();
     const expl = page.locator('#ex2-q1 .q-expl');
     await expect(expl).toBeVisible();
@@ -87,6 +92,11 @@ test.describe('Exercise 3 — Risk Scoring', () => {
     await page.locator('.risk-i[data-row="1"]').fill('5');
     await page.locator('.risk-i[data-row="1"]').dispatchEvent('input');
     await expect(page.locator('#score1')).toHaveText('20');
+  });
+
+  test('shows warning when rows incomplete', async ({ page }) => {
+    await page.locator('#ex3 button.btn-submit').click();
+    await expect(page.locator('#ex3-fp')).toContainText('complete all rows');
   });
 
   test('submit with all fields shows suggested answers', async ({ page }) => {
@@ -129,8 +139,14 @@ test.describe('Exercise 4 — Test Plan Puzzle', () => {
     await expect(page.locator('#ex4-q1 .q-expl')).toHaveClass(/ok/);
   });
 
+  test('shows warning when not all questions answered', async ({ page }) => {
+    await page.locator('#ex4 button.btn-submit').click();
+    await expect(page.locator('#ex4-fp')).toContainText('Please answer all');
+  });
+
   test('wrong answer shows explanation with correct answer', async ({ page }) => {
-    await page.locator('#ex4q1').selectOption('Scope'); // wrong
+    const answers = { ex4q1: 'Scope', ex4q2: 'Test Environments', ex4q3: 'Test Approach', ex4q4: 'Risk Analysis', ex4q5: 'Deliverables', ex4q6: 'Test Schedule', ex4q7: 'Scope', ex4q8: 'Roles & Responsibilities' };
+    for (const [id, val] of Object.entries(answers)) await page.locator(`#${id}`).selectOption(val);
     await page.locator('#ex4 button.btn-submit').click();
     const expl = page.locator('#ex4-q1 .q-expl');
     await expect(expl).toBeVisible();
@@ -169,9 +185,19 @@ test.describe('Exercise 5 — RACI Builder', () => {
     await expect(page.locator('#ex5-badge')).toContainText('Valid');
   });
 
-  test('missing A in a row shows error', async ({ page }) => {
-    // Row 0: assign only R, no A
-    await page.locator('#raci_t0_ql').selectOption('R');
+  test('shows warning when cells are empty', async ({ page }) => {
+    await page.locator('#ex5 button.btn-submit').click();
+    await expect(page.locator('#ex5-fp')).toContainText('fill in all');
+  });
+
+  test('missing A in a row shows RACI error', async ({ page }) => {
+    const roles = ['ql','qe','dev','pm','po'];
+    // Fill all cells but give row 0 only R (no A)
+    for (let ti = 0; ti < 5; ti++) {
+      for (const rid of roles) {
+        await page.locator(`#raci_t${ti}_${rid}`).selectOption('R');
+      }
+    }
     await page.locator('#ex5 button.btn-submit').click();
     await expect(page.locator('#ex5-fp')).toContainText('issue');
   });
@@ -249,6 +275,11 @@ test.describe('Exercise 8 — Severity vs Priority', () => {
     await expect(page.locator('#ex8-badge')).toContainText('6/6');
   });
 
+  test('shows warning when rows incomplete', async ({ page }) => {
+    await page.locator('#ex8 button.btn-submit').click();
+    await expect(page.locator('#ex8-fp')).toContainText('Please fill in');
+  });
+
   test('reset clears selects', async ({ page }) => {
     await page.locator('#ex8s1').selectOption('Critical');
     await page.locator('#ex8 button.btn-reset').click();
@@ -273,8 +304,14 @@ test.describe('Exercise 9 — Test Types', () => {
     await expect(page.locator('#ex9-q1 .q-expl')).toHaveClass(/ok/);
   });
 
+  test('shows warning when not all questions answered', async ({ page }) => {
+    await page.locator('#ex9 button.btn-submit').click();
+    await expect(page.locator('#ex9-fp')).toContainText('Please answer all');
+  });
+
   test('wrong answer shows inline explanation', async ({ page }) => {
-    await page.locator('#ex9q1').selectOption('Regression Testing'); // wrong
+    const answers = { ex9q1: 'Regression Testing', ex9q2: 'Regression Testing', ex9q3: 'Exploratory Testing', ex9q4: 'Performance Testing', ex9q5: 'Security Testing', ex9q6: 'Usability Testing' };
+    for (const [id, val] of Object.entries(answers)) await page.locator(`#${id}`).selectOption(val);
     await page.locator('#ex9 button.btn-submit').click();
     const expl = page.locator('#ex9-q1 .q-expl');
     await expect(expl).toBeVisible();
