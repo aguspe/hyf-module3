@@ -1,0 +1,16 @@
+{
+  "name": "hyf-module3",
+  "version": "1.0.0",
+  "description": "HackYourFuture Module 3 — Test Planning Exercises",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
+  }
+}

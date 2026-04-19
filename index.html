@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYF Module 3 — Test Planning Exercises</title>
+<style>
+:root{--navy:#1B355E;--teal:#0097A7;--orange:#E57220;--text:#2C3E50;--muted:#6C757D;--bg:#F7F9FC;--green:#27AE60;--red:#C0392B;--yellow:#D4860A;--border:#DEE2E6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Calibri,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--teal)}
+
+/* ── Header ── */
+header{background:var(--navy);padding:1.8rem 2rem 1.4rem;border-bottom:5px solid var(--teal)}
+header h1{color:#fff;font-size:1.8rem}
+header p{color:rgba(255,255,255,.55);margin-top:.25rem;font-size:.9rem}
+
+/* ── Nav ── */
+nav{background:#152A4A;padding:.55rem 2rem;display:flex;gap:.35rem;flex-wrap:wrap;align-items:center}
+nav .nav-label{color:rgba(255,255,255,.35);font-size:.75rem;margin-right:.4rem}
+nav a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.78rem;padding:.2rem .65rem;border-radius:12px;transition:all .2s}
+nav a:hover{background:var(--teal);color:#fff}
+
+/* ── Progress bar ── */
+.prog-bar{background:var(--navy);padding:.55rem 2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.prog-bar span{color:rgba(255,255,255,.6);font-size:.8rem;white-space:nowrap;min-width:140px}
+.prog-track{flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:3px}
+.prog-fill{height:100%;background:var(--teal);border-radius:3px;width:0%;transition:width .4s}
+
+/* ── Main ── */
+main{max-width:980px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+/* ── Exercise card ── */
+.ex{background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:2.5rem;overflow:hidden;border:1px solid var(--border);scroll-margin-top:20px}
+.ex-hdr{background:var(--teal);color:#fff;padding:1.05rem 1.4rem;display:flex;align-items:flex-start;gap:.85rem}
+.ex-hdr.submitted{background:#006070}
+.ex-num{background:rgba(255,255,255,.22);border-radius:50%;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.ex-hdr-txt h2{font-size:1rem;font-weight:700}
+.ex-hdr-txt p{font-size:.8rem;opacity:.82;margin-top:.12rem}
+.ex-badge{margin-left:auto;background:rgba(255,255,255,.2);border-radius:10px;padding:.12rem .65rem;font-size:.78rem;font-weight:700;display:none;white-space:nowrap;align-self:center}
+.ex-badge.show{display:block}
+.ex-body{padding:1.4rem}
+
+/* ── Question items ── */
+.qi{background:var(--bg);border-left:4px solid var(--teal);border-radius:0 6px 6px 0;padding:.85rem 1.1rem;margin-bottom:.85rem}
+.qi.ok{border-left-color:var(--green);background:#F1FBF4}
+.qi.bad{border-left-color:var(--red);background:#FEF5F5}
+.qi.model{border-left-color:var(--orange);background:#FFF8F0}
+.qi-txt{font-size:.9rem;font-style:italic;color:var(--navy);margin-bottom:.6rem;line-height:1.5}
+.qi-sub{font-size:.78rem;color:var(--muted);margin-bottom:.5rem}
+
+/* ── Radio opts ── */
+.radio-opts{display:flex;gap:.45rem;flex-wrap:wrap}
+.radio-opts label{display:flex;align-items:center;gap:.3rem;cursor:pointer;padding:.28rem .75rem;border:1.5px solid var(--border);border-radius:20px;font-size:.85rem;transition:all .18s;user-select:none}
+.radio-opts label:hover{border-color:var(--teal)}
+.radio-opts input[type=radio]{accent-color:var(--teal)}
+label.is-correct{border-color:var(--green)!important;background:#E8F5E9!important;color:#1B5E20}
+label.is-wrong{border-color:var(--red)!important;background:#FFEBEE!important;color:#B71C1C}
+label.show-correct{border-color:var(--green)!important;background:#E8F5E9!important}
+
+/* ── Selects / inputs ── */
+select,input[type=text],input[type=number]{border:1.5px solid var(--border);border-radius:5px;padding:.35rem .6rem;font-size:.85rem;font-family:inherit;background:#fff;color:var(--text);transition:border-color .2s}
+select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,151,167,.1)}
+select.is-correct{border-color:var(--green);background:#F1FBF4}
+select.is-wrong{border-color:var(--red);background:#FEF5F5}
+textarea{width:100%;border:1.5px solid var(--border);border-radius:5px;padding:.4rem .7rem;font-size:.85rem;font-family:inherit;color:var(--text);resize:vertical;min-height:75px}
+textarea:focus{outline:none;border-color:var(--teal)}
+input[type=number]{width:62px;text-align:center}
+
+/* ── Tables ── */
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem;margin-bottom:.5rem}
+.tbl th{background:var(--navy);color:#fff;padding:.5rem .8rem;text-align:left;font-weight:600}
+.tbl td{padding:.45rem .8rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:nth-child(even) td{background:#F7F9FC}
+.tbl td.center{text-align:center}
+.tbl input[type=number]{width:58px}
+.tbl select{min-width:78px}
+.score-val{font-weight:700;color:var(--navy)}
+
+/* ── Buttons ── */
+.btn-row{margin-top:1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.btn-submit{background:var(--navy);color:#fff;border:none;padding:.58rem 1.45rem;border-radius:6px;font-size:.9rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .2s}
+.btn-submit:hover{background:var(--teal)}
+.btn-reset{background:transparent;color:var(--muted);border:1.5px solid var(--border);padding:.52rem 1.05rem;border-radius:6px;font-size:.82rem;font-family:inherit;cursor:pointer;transition:all .2s}
+.btn-reset:hover{border-color:var(--red);color:var(--red)}
+
+/* ── Feedback panel ── */
+.fp{margin-top:1rem;border-radius:7px;padding:.95rem 1.15rem;display:none;animation:fadeIn .3s}
+.fp.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.fp-ok{background:#E8F5E9;border-left:4px solid var(--green)}
+.fp-warn{background:#FFF8E1;border-left:4px solid #F39C12}
+.fp-info{background:#EBF5FF;border-left:4px solid var(--teal)}
+.fp h4{font-size:.92rem;font-weight:700;margin-bottom:.5rem}
+.fp-ok h4{color:#1B5E20}
+.fp-warn h4{color:#7D5A0A}
+.fp-info h4{color:var(--teal)}
+.fp ul{padding-left:1.1rem;font-size:.86rem}
+.fp li{margin:.25rem 0;line-height:1.5}
+.fp p{font-size:.86rem;line-height:1.6;margin:.3rem 0}
+.fp .ans-list{list-style:none;padding:0}
+.fp .ans-list li{display:flex;align-items:flex-start;gap:.4rem;padding:.22rem 0;font-size:.85rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.fp .ans-list li:last-child{border:none}
+.badge{flex-shrink:0;padding:.08rem .45rem;border-radius:3px;font-size:.68rem;font-weight:800;margin-top:.1rem}
+.bc{background:#C8E6C9;color:#1B5E20}.bw{background:#FFCDD2;color:#B71C1C}.ba{background:#BBDEFB;color:#0D47A1}
+.info-box{background:#EBF5FF;border:1.5px solid rgba(0,151,167,.3);border-radius:6px;padding:.7rem .95rem;font-size:.85rem;color:var(--navy);margin-bottom:1rem}
+.info-box strong{color:var(--teal)}
+.q-expl{margin-top:.55rem;font-size:.82rem;padding:.38rem .7rem;border-radius:5px;line-height:1.5}
+.q-expl.ok{background:#E8F5E9;color:#1B5E20}
+.q-expl.wrong{background:#FFF3E0;color:#5D3200}
+
+/* ── Final CTA ── */
+.final{background:var(--navy);color:#fff;border-radius:10px;padding:2.5rem;text-align:center;margin-top:3rem}
+.final h2{font-size:1.5rem;margin-bottom:.4rem}
+.final p{color:rgba(255,255,255,.55);margin-bottom:1.2rem;font-size:.92rem}
+#final-score{font-size:3rem;font-weight:800;color:var(--teal);display:block;margin:.8rem 0}
+.btn-final{background:var(--teal);color:#fff;border:none;padding:.7rem 2rem;border-radius:6px;font-size:.95rem;font-weight:700;font-family:inherit;cursor:pointer;transition:background .2s}
+.btn-final:hover{background:#007788}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Test Planning &amp; Strategy</h1>
+  <p>HackYourFuture — Module 3 | Interactive Exercises</p>
+</header>
+
+<nav>
+  <span class="nav-label">Jump to:</span>
+  <a href="#ex1">1. Plan vs Strategy</a>
+  <a href="#ex2">2. Test Levels</a>
+  <a href="#ex3">3. Risk Scoring</a>
+  <a href="#ex4">4. Plan Puzzle</a>
+  <a href="#ex5">5. RACI Builder</a>
+  <a href="#ex6">6. E-commerce Challenge</a>
+  <a href="#ex7">7. Apply RBT</a>
+  <a href="#ex8">8. Severity vs Priority</a>
+  <a href="#ex9">9. Test Types</a>
+  <a href="#ex10">10. Bug Report</a>
+  <a href="#ex11">11. Equiv. Partitioning</a>
+  <a href="#ex12">12. Missing Test Cases</a>
+  <a href="#ex13">13. Entry &amp; Exit Criteria</a>
+  <a href="#ex14">14. Sprint Test Plan</a>
+</nav>
+
+<div class="prog-bar">
+  <span id="prog-text">0 / 7 submitted</span>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 1 — Plan vs Strategy
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex1">
+  <div class="ex-hdr" id="ex1-hdr">
+    <div class="ex-num">1</div>
+    <div class="ex-hdr-txt">
+      <h2>Plan or Strategy?</h2>
+      <p>Classify each statement as a Test Plan item (P) or a Test Strategy item (S). Wrong answers show an explanation.</p>
+    </div>
+    <span class="ex-badge" id="ex1-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box">
+      <strong>Test Strategy</strong> = org-wide, high-level, stable — defines HOW the org approaches testing across all projects.<br>
+      <strong>Test Plan</strong> = project-specific, detailed, dynamic — defines WHAT will be tested, by WHOM, and WHEN for a specific release.
+    </div>
+
+    <div class="qi" id="ex1-q1">
+      <div class="qi-txt">"Our QA organisation follows a risk-based testing approach for all software products we develop."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q1" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q1" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q2">
+      <div class="qi-txt">"Ana will test the Login and Registration modules from April 5 to April 10."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q2" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q2" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q3">
+      <div class="qi-txt">"No release goes live until all Critical and High severity defects are closed or formally accepted by the Product Owner."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q3" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q3" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q4">
+      <div class="qi-txt">"Sprint 22 testing includes 45 automated regression tests and 20 manual exploratory tests for the Checkout redesign."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q4" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q4" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q5">
+      <div class="qi-txt">"All web applications we build must be validated against the OWASP Top 10 security vulnerabilities."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q5" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q5" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q6">
+      <div class="qi-txt">"Out of scope for this release: the Admin Portal, Email Campaign Management, and the Reporting Dashboard."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q6" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q6" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q7">
+      <div class="qi-txt">"The QA team applies a four-level severity classification (Critical / High / Medium / Low) across all projects in the organisation."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q7" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q7" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="qi" id="ex1-q8">
+      <div class="qi-txt">"Bram will execute performance testing for the Checkout redesign using JMeter before the December 15 release."</div>
+      <div class="radio-opts">
+        <label><input type="radio" name="ex1q8" value="P"> Plan (P)</label>
+        <label><input type="radio" name="ex1q8" value="S"> Strategy (S)</label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx1()">Submit</button>
+      <button class="btn-reset" onclick="resetEx1()">Reset</button>
+    </div>
+    <div class="fp" id="ex1-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 2 — Test Levels
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex2">
+  <div class="ex-hdr" id="ex2-hdr">
+    <div class="ex-num">2</div>
+    <div class="ex-hdr-txt">
+      <h2>Which Test Level?</h2>
+      <p>Match each activity to: Unit · Integration · System · Acceptance (UAT)</p>
+    </div>
+    <span class="ex-badge" id="ex2-badge"></span>
+  </div>
+  <div class="ex-body">
+
+    <div class="qi" id="ex2-q1">
+      <div class="qi-txt">"Testing that the login function rejects an empty password field."</div>
+      <select id="ex2q1">
+        <option value="">— Select level —</option>
+        <option>Unit</option><option>Integration</option><option>System</option><option>Acceptance (UAT)</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex2-q2">
+      <div class="qi-txt">"Verifying that a successful user registration triggers a welcome email via the email service."</div>
+      <select id="ex2q2">
+        <option value="">— Select level —</option>
+        <option>Unit</option><option>Integration</option><option>System</option><option>Acceptance (UAT)</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex2-q3">
+      <div class="qi-txt">"End-to-end test: a new user registers, logs in, adds items to cart, and completes a purchase."</div>
+      <select id="ex2q3">
+        <option value="">— Select level —</option>
+        <option>Unit</option><option>Integration</option><option>System</option><option>Acceptance (UAT)</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex2-q4">
+      <div class="qi-txt">"A product owner verifies that the return policy flow matches business requirements."</div>
+      <select id="ex2q4">
+        <option value="">— Select level —</option>
+        <option>Unit</option><option>Integration</option><option>System</option><option>Acceptance (UAT)</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex2-q5">
+      <div class="qi-txt">"Testing that the search API returns correct results when called by the frontend component."</div>
+      <select id="ex2q5">
+        <option value="">— Select level —</option>
+        <option>Unit</option><option>Integration</option><option>System</option><option>Acceptance (UAT)</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex2-q6">
+      <div class="qi-txt">"Checking that the discount calculation function returns 10% off when a valid promo code is applied."</div>
+      <select id="ex2q6">
+        <option value="">— Select level —</option>
+        <option>Unit</option><option>Integration</option><option>System</option><option>Acceptance (UAT)</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx2()">Submit</button>
+      <button class="btn-reset" onclick="resetEx2()">Reset</button>
+    </div>
+    <div class="fp" id="ex2-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 3 — Risk Scoring
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex3">
+  <div class="ex-hdr" id="ex3-hdr">
+    <div class="ex-num">3</div>
+    <div class="ex-hdr-txt">
+      <h2>Risk Scoring Practice</h2>
+      <p>Enter Likelihood (1–5) and Impact (1–5). Score auto-calculates. Then choose priority.</p>
+    </div>
+    <span class="ex-badge" id="ex3-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box"><strong>Formula:</strong> Score = Likelihood × Impact &nbsp;|&nbsp; <strong>1–9</strong> = Low &nbsp;|&nbsp; <strong>10–16</strong> = Medium &nbsp;|&nbsp; <strong>17–25</strong> = High</div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="width:38%">Risk</th>
+          <th class="center">Likelihood<br><small style="font-weight:400">(1–5)</small></th>
+          <th class="center">Impact<br><small style="font-weight:400">(1–5)</small></th>
+          <th class="center">Score</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Payment processing crashes during peak checkout traffic</td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-l" data-row="1"></td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-i" data-row="1"></td>
+          <td class="center"><span class="score-val" id="score1">—</span></td>
+          <td><select id="pri1"><option value="">—</option><option>Low</option><option>Medium</option><option>High</option></select></td>
+        </tr>
+        <tr>
+          <td>Profile picture upload displays the wrong image</td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-l" data-row="2"></td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-i" data-row="2"></td>
+          <td class="center"><span class="score-val" id="score2">—</span></td>
+          <td><select id="pri2"><option value="">—</option><option>Low</option><option>Medium</option><option>High</option></select></td>
+        </tr>
+        <tr>
+          <td>Admin panel has no authentication — accessible to anyone</td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-l" data-row="3"></td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-i" data-row="3"></td>
+          <td class="center"><span class="score-val" id="score3">—</span></td>
+          <td><select id="pri3"><option value="">—</option><option>Low</option><option>Medium</option><option>High</option></select></td>
+        </tr>
+        <tr>
+          <td>Search results load in 3 s instead of the 2 s SLA</td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-l" data-row="4"></td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-i" data-row="4"></td>
+          <td class="center"><span class="score-val" id="score4">—</span></td>
+          <td><select id="pri4"><option value="">—</option><option>Low</option><option>Medium</option><option>High</option></select></td>
+        </tr>
+        <tr>
+          <td>Password reset links expire after 24 h instead of 1 h</td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-l" data-row="5"></td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-i" data-row="5"></td>
+          <td class="center"><span class="score-val" id="score5">—</span></td>
+          <td><select id="pri5"><option value="">—</option><option>Low</option><option>Medium</option><option>High</option></select></td>
+        </tr>
+        <tr>
+          <td>Promotional banner displays incorrectly on mobile Safari</td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-l" data-row="6"></td>
+          <td class="center"><input type="number" min="1" max="5" class="risk-i" data-row="6"></td>
+          <td class="center"><span class="score-val" id="score6">—</span></td>
+          <td><select id="pri6"><option value="">—</option><option>Low</option><option>Medium</option><option>High</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx3()">Submit</button>
+      <button class="btn-reset" onclick="resetEx3()">Reset</button>
+    </div>
+    <div class="fp" id="ex3-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 4 — Test Plan Puzzle
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex4">
+  <div class="ex-hdr" id="ex4-hdr">
+    <div class="ex-num">4</div>
+    <div class="ex-hdr-txt">
+      <h2>Test Plan Puzzle</h2>
+      <p>Match each description to the correct Test Plan component.</p>
+    </div>
+    <span class="ex-badge" id="ex4-badge"></span>
+  </div>
+  <div class="ex-body">
+
+    <div class="qi" id="ex4-q1">
+      <div class="qi-txt">"Ensure the login page works correctly on all supported browsers."</div>
+      <select id="ex4q1"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q2">
+      <div class="qi-txt">"Mobile: Android 12/10/8 (Chrome), iOS 16/14 (Safari). Desktop: Chrome, Firefox, Edge on Windows/Mac."</div>
+      <select id="ex4q2"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q3">
+      <div class="qi-txt">"Manual functional testing combined with exploratory testing for edge cases."</div>
+      <select id="ex4q3"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q4">
+      <div class="qi-txt">"Risk: Delayed build delivery. Likelihood: Medium. Impact: High. Mitigation: Use stubs/mocks."</div>
+      <select id="ex4q4"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q5">
+      <div class="qi-txt">"Test cases, defect log, test execution report, and final test summary report."</div>
+      <select id="ex4q5"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q6">
+      <div class="qi-txt">"Test execution: Apr 1–10. Regression testing: Apr 11–12. Sign-off: Apr 14."</div>
+      <select id="ex4q6"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q7">
+      <div class="qi-txt">"In scope: Login, Registration, Checkout. Out of scope: Admin Portal, Reporting Dashboard."</div>
+      <select id="ex4q7"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex4-q8">
+      <div class="qi-txt">"Tester A — Regression testing. Tester B — Test data setup. QA Lead — Test plan sign-off."</div>
+      <select id="ex4q8"><option value="">— Component —</option>
+        <option>Objectives</option><option>Scope</option><option>Test Approach</option>
+        <option>Risk Analysis</option><option>Test Schedule</option>
+        <option>Test Environments</option><option>Roles &amp; Responsibilities</option><option>Deliverables</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx4()">Submit</button>
+      <button class="btn-reset" onclick="resetEx4()">Reset</button>
+    </div>
+    <div class="fp" id="ex4-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 5 — Build a RACI Matrix
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex5">
+  <div class="ex-hdr" id="ex5-hdr">
+    <div class="ex-num">5</div>
+    <div class="ex-hdr-txt">
+      <h2>Build a RACI Matrix</h2>
+      <p>Assign R / A / C / I to each cell. Rules: exactly 1 A per row, at least 1 R per row.</p>
+    </div>
+    <span class="ex-badge" id="ex5-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box">
+      <strong>R</strong> = Responsible (does the work) &nbsp;|&nbsp;
+      <strong>A</strong> = Accountable (owns outcome — exactly 1 per task) &nbsp;|&nbsp;
+      <strong>C</strong> = Consulted &nbsp;|&nbsp;
+      <strong>I</strong> = Informed
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="width:32%">Task</th>
+          <th class="center">QA Lead</th>
+          <th class="center">QA Engineer</th>
+          <th class="center">Developer</th>
+          <th class="center">PM</th>
+          <th class="center">Product Owner</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="raci-body">
+      </tbody>
+    </table>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:.4rem">* RA = one person is both Responsible and Accountable (valid for single-owner tasks)</p>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx5()">Validate &amp; Submit</button>
+      <button class="btn-reset" onclick="resetEx5()">Reset</button>
+    </div>
+    <div class="fp" id="ex5-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 6 — E-commerce Challenge
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex6">
+  <div class="ex-hdr" id="ex6-hdr">
+    <div class="ex-num">6</div>
+    <div class="ex-hdr-txt">
+      <h2>E-commerce Platform Challenge</h2>
+      <p>Define objectives, scope, and clarification questions for the scenario below.</p>
+    </div>
+    <span class="ex-badge" id="ex6-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3)">
+      <strong>Scenario:</strong> A retail company is launching a new e-commerce platform.
+      Customers can browse products, add to cart, complete purchases, and track orders.
+      The platform supports multiple payment methods, user authentication, and third-party
+      shipping integrations. It must handle high traffic during peak sales events.
+    </div>
+
+    <div class="qi model" id="ex6-q1">
+      <div class="qi-txt">Write 3–4 test objectives for this project.</div>
+      <textarea id="ex6a1" placeholder="1. Verify that...&#10;2. Ensure that...&#10;3. Validate that..."></textarea>
+    </div>
+
+    <div class="qi model" id="ex6-q2">
+      <div class="qi-txt">Define what is IN scope and what is OUT of scope.</div>
+      <textarea id="ex6a2" placeholder="IN SCOPE:&#10;- ...&#10;&#10;OUT OF SCOPE:&#10;- ..."></textarea>
+    </div>
+
+    <div class="qi model" id="ex6-q3">
+      <div class="qi-txt">Write 3 clarification questions you would ask the team before testing.</div>
+      <textarea id="ex6a3" placeholder="1. What is the expected peak load (concurrent users)?&#10;2. ...&#10;3. ..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx6()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx6()">Reset</button>
+    </div>
+    <div class="fp" id="ex6-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 7 — Apply RBT (Hospital System)
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex7">
+  <div class="ex-hdr" id="ex7-hdr">
+    <div class="ex-num">7</div>
+    <div class="ex-hdr-txt">
+      <h2>Apply Risk-Based Testing</h2>
+      <p>Rank areas by risk priority. Justify your top 3. Team: 2 testers, 5 days.</p>
+    </div>
+    <span class="ex-badge" id="ex7-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3)">
+      <strong>System:</strong> Hospital appointment booking platform.
+      Features: patient login, appointment booking/cancellation, doctor schedule management (admin),
+      email reminders, prescription history (read-only), payments for paid consultations,
+      branding/UI, and insurance provider API integration.
+    </div>
+
+    <p style="font-size:.88rem;color:var(--navy);font-weight:600;margin-bottom:.75rem">Step 1 — Rank all 8 areas by risk priority (1 = highest risk, 8 = lowest):</p>
+
+    <table class="tbl">
+      <thead>
+        <tr><th style="width:60%">Area</th><th class="center" style="width:20%">Your Rank (1–8)</th><th class="center">Suggested Rank</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Patient login and authentication</td><td class="center"><input type="number" min="1" max="8" id="rank1"></td><td class="center" id="srank1" style="color:var(--muted)">—</td></tr>
+        <tr><td>Appointment booking and cancellation</td><td class="center"><input type="number" min="1" max="8" id="rank2"></td><td class="center" id="srank2" style="color:var(--muted)">—</td></tr>
+        <tr><td>Doctor schedule management (admin only)</td><td class="center"><input type="number" min="1" max="8" id="rank3"></td><td class="center" id="srank3" style="color:var(--muted)">—</td></tr>
+        <tr><td>Email reminders for appointments</td><td class="center"><input type="number" min="1" max="8" id="rank4"></td><td class="center" id="srank4" style="color:var(--muted)">—</td></tr>
+        <tr><td>Prescription history display (read-only)</td><td class="center"><input type="number" min="1" max="8" id="rank5"></td><td class="center" id="srank5" style="color:var(--muted)">—</td></tr>
+        <tr><td>Payment for paid consultations</td><td class="center"><input type="number" min="1" max="8" id="rank6"></td><td class="center" id="srank6" style="color:var(--muted)">—</td></tr>
+        <tr><td>Hospital branding and UI styling</td><td class="center"><input type="number" min="1" max="8" id="rank7"></td><td class="center" id="srank7" style="color:var(--muted)">—</td></tr>
+        <tr><td>Integration with insurance provider API</td><td class="center"><input type="number" min="1" max="8" id="rank8"></td><td class="center" id="srank8" style="color:var(--muted)">—</td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:.88rem;color:var(--navy);font-weight:600;margin:1.2rem 0 .6rem">Step 2 — Justify your top 3 choices:</p>
+
+    <div class="qi model" id="ex7-j1">
+      <div class="qi-txt">Top risk area #1 — Why is it high risk? What testing type? Manual or automated? When?</div>
+      <textarea id="ex7just1" placeholder="Area: ...&#10;Why high risk: ...&#10;Testing type: ...&#10;Manual / Automated: ...&#10;When: ..."></textarea>
+    </div>
+    <div class="qi model" id="ex7-j2">
+      <div class="qi-txt">Top risk area #2 — Same questions.</div>
+      <textarea id="ex7just2" placeholder="Area: ...&#10;Why high risk: ...&#10;Testing type: ...&#10;Manual / Automated: ...&#10;When: ..."></textarea>
+    </div>
+    <div class="qi model" id="ex7-j3">
+      <div class="qi-txt">Top risk area #3 — Same questions.</div>
+      <textarea id="ex7just3" placeholder="Area: ...&#10;Why high risk: ...&#10;Testing type: ...&#10;Manual / Automated: ...&#10;When: ..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx7()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx7()">Reset</button>
+    </div>
+    <div class="fp" id="ex7-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 8 — Severity vs Priority
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex8">
+  <div class="ex-hdr" id="ex8-hdr">
+    <div class="ex-num">8</div>
+    <div class="ex-hdr-txt">
+      <h2>Severity vs Priority</h2>
+      <p>Assign Severity and Priority to each defect. They are NOT the same thing.</p>
+    </div>
+    <span class="ex-badge" id="ex8-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box">
+      <strong>Severity</strong> = how bad is the defect's impact on the system? &nbsp;|&nbsp;
+      <strong>Priority</strong> = how urgently must it be fixed? (business need)
+      <br>A low-severity bug can have high priority, and vice versa.
+    </div>
+
+    <table class="tbl" id="ex8-tbl">
+      <thead>
+        <tr>
+          <th style="width:44%">Defect</th>
+          <th>Severity</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Place Order" button returns a 500 error for all users during checkout.</td>
+          <td><select id="ex8s1"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+          <td><select id="ex8p1"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+        </tr>
+        <tr>
+          <td>The company logo has incorrect alt text ("img" instead of "BrandName logo").</td>
+          <td><select id="ex8s2"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+          <td><select id="ex8p2"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+        </tr>
+        <tr>
+          <td>The Privacy Policy link is broken on a low-traffic help page visited by ~10 users/month.</td>
+          <td><select id="ex8s3"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+          <td><select id="ex8p3"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+        </tr>
+        <tr>
+          <td>The admin dashboard crashes on load, but a simple URL workaround lets admins access all data.</td>
+          <td><select id="ex8s4"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+          <td><select id="ex8p4"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+        </tr>
+        <tr>
+          <td>Payment page shows currency as "USD" instead of "$" — the CEO is presenting a demo tomorrow.</td>
+          <td><select id="ex8s5"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+          <td><select id="ex8p5"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+        </tr>
+        <tr>
+          <td>Security scan reveals user passwords are stored in plain text in the database (invisible to end users currently).</td>
+          <td><select id="ex8s6"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+          <td><select id="ex8p6"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx8()">Submit</button>
+      <button class="btn-reset" onclick="resetEx8()">Reset</button>
+    </div>
+    <div class="fp" id="ex8-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 9 — Test Type Classification
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex9">
+  <div class="ex-hdr" id="ex9-hdr">
+    <div class="ex-num">9</div>
+    <div class="ex-hdr-txt">
+      <h2>Test Type Classification</h2>
+      <p>Match each scenario to the correct test type.</p>
+    </div>
+    <span class="ex-badge" id="ex9-badge"></span>
+  </div>
+  <div class="ex-body">
+
+    <div class="qi" id="ex9-q1">
+      <div class="qi-txt">After a new build is deployed, you open the app, navigate to the homepage, click login, and check that 3 core flows work — before running the full suite.</div>
+      <select id="ex9q1"><option value="">— Test type —</option>
+        <option>Smoke Testing</option><option>Regression Testing</option><option>Exploratory Testing</option>
+        <option>Performance Testing</option><option>Security Testing</option><option>Usability Testing</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex9-q2">
+      <div class="qi-txt">A developer fixes a bug in the login flow. You re-run every test in the test suite to make sure the fix didn't break anything else.</div>
+      <select id="ex9q2"><option value="">— Test type —</option>
+        <option>Smoke Testing</option><option>Regression Testing</option><option>Exploratory Testing</option>
+        <option>Performance Testing</option><option>Security Testing</option><option>Usability Testing</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex9-q3">
+      <div class="qi-txt">Without a test script, you navigate through the new payment flow trying unexpected inputs and edge cases to find bugs that weren't anticipated.</div>
+      <select id="ex9q3"><option value="">— Test type —</option>
+        <option>Smoke Testing</option><option>Regression Testing</option><option>Exploratory Testing</option>
+        <option>Performance Testing</option><option>Security Testing</option><option>Usability Testing</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex9-q4">
+      <div class="qi-txt">You use JMeter to simulate 5,000 concurrent users placing orders to check whether the system stays stable and meets the 2-second response SLA.</div>
+      <select id="ex9q4"><option value="">— Test type —</option>
+        <option>Smoke Testing</option><option>Regression Testing</option><option>Exploratory Testing</option>
+        <option>Performance Testing</option><option>Security Testing</option><option>Usability Testing</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex9-q5">
+      <div class="qi-txt">You attempt to access /admin/delete-user as a regular logged-in user by typing it directly in the URL bar — checking whether access controls are correctly enforced.</div>
+      <select id="ex9q5"><option value="">— Test type —</option>
+        <option>Smoke Testing</option><option>Regression Testing</option><option>Exploratory Testing</option>
+        <option>Performance Testing</option><option>Security Testing</option><option>Usability Testing</option>
+      </select>
+    </div>
+
+    <div class="qi" id="ex9-q6">
+      <div class="qi-txt">You recruit 5 participants unfamiliar with the product and ask them to complete registration while you observe — noting where they hesitate, get confused, or make errors.</div>
+      <select id="ex9q6"><option value="">— Test type —</option>
+        <option>Smoke Testing</option><option>Regression Testing</option><option>Exploratory Testing</option>
+        <option>Performance Testing</option><option>Security Testing</option><option>Usability Testing</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx9()">Submit</button>
+      <button class="btn-reset" onclick="resetEx9()">Reset</button>
+    </div>
+    <div class="fp" id="ex9-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 10 — Write a Bug Report
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex10">
+  <div class="ex-hdr" id="ex10-hdr">
+    <div class="ex-num">10</div>
+    <div class="ex-hdr-txt">
+      <h2>Write a Bug Report</h2>
+      <p>Fill in all sections of a professional bug report for the scenario below.</p>
+    </div>
+    <span class="ex-badge" id="ex10-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3)">
+      <strong>Scenario:</strong> You are testing an e-commerce app. When a logged-in user filters products
+      by price range (e.g. $10–$50) and then clicks "Add to Cart" on a discounted item,
+      the cart adds the item at its original full price — not the filtered/discounted price.
+      This happens on Chrome (desktop) in the QA environment.
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Bug Title — one clear, specific sentence summarizing the defect.</div>
+      <input type="text" id="ex10-title" style="width:100%" placeholder="[Component] Short description of what is wrong">
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Steps to Reproduce — numbered, exact steps to recreate the bug.</div>
+      <textarea id="ex10-steps" placeholder="1. Log in as a registered user&#10;2. Navigate to Products page&#10;3. ..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Expected Behaviour — what should happen?</div>
+      <textarea id="ex10-expected" style="min-height:55px" placeholder="When a user filters by price range and adds an item to cart, the cart should use..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Actual Behaviour — what actually happens?</div>
+      <textarea id="ex10-actual" style="min-height:55px" placeholder="The cart adds the item at the original price instead of..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Severity and Priority — with justification.</div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+        <label style="font-size:.85rem">Severity:
+          <select id="ex10-sev" style="margin-left:.4rem"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </label>
+        <label style="font-size:.85rem">Priority:
+          <select id="ex10-pri" style="margin-left:.4rem"><option value="">—</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </label>
+      </div>
+      <textarea id="ex10-justify" style="min-height:50px;margin-top:.6rem" placeholder="Why did you choose this severity and priority?"></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Environment &amp; Additional Info — browser, OS, build version, reproducibility.</div>
+      <textarea id="ex10-env" style="min-height:55px" placeholder="Browser: Chrome 120 | OS: Windows 11 | Build: QA-v2.4 | Reproducible: Always&#10;Workaround: None known"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx10()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx10()">Reset</button>
+    </div>
+    <div class="fp" id="ex10-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 11 — Equivalence Partitioning
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex11">
+  <div class="ex-hdr" id="ex11-hdr">
+    <div class="ex-num">11</div>
+    <div class="ex-hdr-txt">
+      <h2>Equivalence Partitioning &amp; Boundary Values</h2>
+      <p>Identify test classes and boundary values for the password field below.</p>
+    </div>
+    <span class="ex-badge" id="ex11-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3)">
+      <strong>Password field rules:</strong>
+      <ul style="margin:.4rem 0 0 1.1rem;font-size:.88rem">
+        <li>Length: 8–20 characters</li>
+        <li>Must contain at least 1 uppercase letter</li>
+        <li>Must contain at least 1 number</li>
+        <li>Spaces are NOT allowed</li>
+      </ul>
+    </div>
+
+    <p style="font-size:.88rem;font-weight:600;color:var(--navy);margin-bottom:.6rem">Part A — Identify the equivalence classes. For each, give one example test value.</p>
+
+    <table class="tbl" style="margin-bottom:1rem">
+      <thead><tr><th style="width:30%">Class Type</th><th>Description</th><th style="width:30%">Example Test Value</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span style="color:var(--green);font-weight:700">✓ VALID</span></td>
+          <td><input type="text" id="ex11-v1" style="width:100%" placeholder="Valid class description..."></td>
+          <td><input type="text" id="ex11-v1ex" placeholder="e.g. Password1"></td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--red);font-weight:700">✗ INVALID #1</span></td>
+          <td><input type="text" id="ex11-i1" style="width:100%" placeholder="Invalid class description..."></td>
+          <td><input type="text" id="ex11-i1ex" placeholder="example value..."></td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--red);font-weight:700">✗ INVALID #2</span></td>
+          <td><input type="text" id="ex11-i2" style="width:100%" placeholder="Invalid class description..."></td>
+          <td><input type="text" id="ex11-i2ex" placeholder="example value..."></td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--red);font-weight:700">✗ INVALID #3</span></td>
+          <td><input type="text" id="ex11-i3" style="width:100%" placeholder="Invalid class description..."></td>
+          <td><input type="text" id="ex11-i3ex" placeholder="example value..."></td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--red);font-weight:700">✗ INVALID #4</span></td>
+          <td><input type="text" id="ex11-i4" style="width:100%" placeholder="Invalid class description..."></td>
+          <td><input type="text" id="ex11-i4ex" placeholder="example value..."></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:.88rem;font-weight:600;color:var(--navy);margin-bottom:.5rem">Part B — Identify at least 4 boundary values for the length rule.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+      <div class="qi model" style="margin:0">
+        <div class="qi-sub">Boundary value 1 (value + valid/invalid)</div>
+        <input type="text" id="ex11-b1" style="width:100%" placeholder="e.g. 7 characters — INVALID (too short)">
+      </div>
+      <div class="qi model" style="margin:0">
+        <div class="qi-sub">Boundary value 2</div>
+        <input type="text" id="ex11-b2" style="width:100%" placeholder="e.g. 8 characters — VALID (lower bound)">
+      </div>
+      <div class="qi model" style="margin:0">
+        <div class="qi-sub">Boundary value 3</div>
+        <input type="text" id="ex11-b3" style="width:100%" placeholder="">
+      </div>
+      <div class="qi model" style="margin:0">
+        <div class="qi-sub">Boundary value 4</div>
+        <input type="text" id="ex11-b4" style="width:100%" placeholder="">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx11()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx11()">Reset</button>
+    </div>
+    <div class="fp" id="ex11-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 12 — Find the Missing Test Cases
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex12">
+  <div class="ex-hdr" id="ex12-hdr">
+    <div class="ex-num">12</div>
+    <div class="ex-hdr-txt">
+      <h2>Find the Missing Test Cases</h2>
+      <p>Review the existing test suite and identify what critical scenarios are missing.</p>
+    </div>
+    <span class="ex-badge" id="ex12-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3)">
+      <strong>Feature:</strong> User Login with email and password.
+      <br><strong>Existing test cases:</strong>
+      <ol style="margin:.5rem 0 0 1.1rem;font-size:.88rem">
+        <li>Login with valid email and correct password → user is logged in</li>
+        <li>Login with valid email and wrong password → error message shown</li>
+        <li>Login with empty email field → validation error shown</li>
+      </ol>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">List at least 6 missing test cases. For each, add a short note on WHY it matters.</div>
+      <textarea id="ex12-answer" style="min-height:160px"
+        placeholder="1. Login with empty password field → Why: empty email is tested but not empty password&#10;2. ...&#10;3. ...&#10;4. ...&#10;5. ...&#10;6. ..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx12()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx12()">Reset</button>
+    </div>
+    <div class="fp" id="ex12-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 13 — Entry & Exit Criteria
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex13">
+  <div class="ex-hdr" id="ex13-hdr">
+    <div class="ex-num">13</div>
+    <div class="ex-hdr-txt">
+      <h2>Entry &amp; Exit Criteria</h2>
+      <p>Define when testing can START and when testing can STOP for the scenario below.</p>
+    </div>
+    <span class="ex-badge" id="ex13-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box">
+      <strong>Entry Criteria</strong> = conditions that must be true before testing begins.<br>
+      <strong>Exit Criteria</strong> = conditions that must be true before testing is declared complete.
+    </div>
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3);margin-top:.6rem">
+      <strong>Context:</strong> Sprint 8 — adding a "Saved Addresses" feature to a checkout flow.
+      Users can save up to 5 delivery addresses and select one during checkout.
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Write at least 4 Entry Criteria — what must be ready before QA starts?</div>
+      <textarea id="ex13-entry" style="min-height:100px"
+        placeholder="1. The feature is deployed to the QA environment&#10;2. ...&#10;3. ...&#10;4. ..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">Write at least 4 Exit Criteria — what must be true before QA signs off?</div>
+      <textarea id="ex13-exit" style="min-height:100px"
+        placeholder="1. All planned test cases have been executed&#10;2. ...&#10;3. ...&#10;4. ..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx13()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx13()">Reset</button>
+    </div>
+    <div class="fp" id="ex13-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     EXERCISE 14 — Sprint Test Plan
+════════════════════════════════════════════════════ -->
+<section class="ex" id="ex14">
+  <div class="ex-hdr" id="ex14-hdr">
+    <div class="ex-num">14</div>
+    <div class="ex-hdr-txt">
+      <h2>Write a Sprint Test Plan</h2>
+      <p>Write a concise test plan for the sprint below — all key sections, one page.</p>
+    </div>
+    <span class="ex-badge" id="ex14-badge"></span>
+  </div>
+  <div class="ex-body">
+    <div class="info-box" style="background:#FFF8F0;border-color:rgba(229,114,32,.3)">
+      <strong>Sprint 15 — Wishlist Feature</strong><br>
+      Users can: add items to a wishlist (max 20 items), remove items, and share their wishlist via a public link.
+      Wishlist persists across sessions. No wishlist for guest users — login required.
+      <br><strong>Team:</strong> 1 QA Engineer. <strong>Duration:</strong> 2-week sprint, QA has 4 working days (code delivered end of day 5).
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">1. Test Objectives — what are you trying to prove?</div>
+      <textarea id="ex14-obj" style="min-height:70px" placeholder="Verify that..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">2. Scope — In scope / Out of scope</div>
+      <textarea id="ex14-scope" style="min-height:70px" placeholder="IN SCOPE:&#10;OUT OF SCOPE:"></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">3. Test Approach — what types of testing will you do and how?</div>
+      <textarea id="ex14-approach" style="min-height:70px" placeholder="Functional testing of...&#10;Exploratory testing...&#10;Automation: ..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">4. Risks — list 2 risks and a mitigation for each.</div>
+      <textarea id="ex14-risks" style="min-height:70px" placeholder="Risk 1: ...   Mitigation: ...&#10;Risk 2: ...   Mitigation: ..."></textarea>
+    </div>
+
+    <div class="qi model">
+      <div class="qi-txt">5. Test Schedule — when will each activity happen across your 4 days?</div>
+      <textarea id="ex14-schedule" style="min-height:80px" placeholder="Day 1 (Apr X): Review stories, write test cases&#10;Day 2: ...&#10;Day 3: ...&#10;Day 4: ..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-submit" onclick="checkEx14()">Submit &amp; See Model Answer</button>
+      <button class="btn-reset" onclick="resetEx14()">Reset</button>
+    </div>
+    <div class="fp" id="ex14-fp"></div>
+  </div>
+</section>
+
+
+<!-- ═══ Final ═══ -->
+<div class="final">
+  <h2>All Exercises</h2>
+  <p>Submit all 7 exercises above to track your progress.</p>
+  <span id="final-score">0 / 7</span>
+  <p id="final-msg" style="color:rgba(255,255,255,.7);margin-bottom:1.5rem"></p>
+  <button class="btn-final" onclick="scrollToFirst()">↑ Back to top</button>
+</div>
+
+</main>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+const submitted = {};
+const TOTAL = 14;
+
+function markSubmitted(id) {
+  if (!submitted[id]) { submitted[id] = true; updateProgress(); }
+  const hdr = document.getElementById(id + '-hdr');
+  if (hdr) hdr.classList.add('submitted');
+}
+
+function updateProgress() {
+  const n = Object.keys(submitted).length;
+  document.getElementById('prog-text').textContent = n + ' / ' + TOTAL + ' submitted';
+  document.getElementById('prog-fill').style.width = (n / TOTAL * 100) + '%';
+  document.getElementById('final-score').textContent = n + ' / ' + TOTAL;
+  document.getElementById('final-msg').textContent =
+    n === TOTAL ? '🎉 All exercises submitted! Great work.' :
+    n >= 4 ? 'Keep going — you\'re more than halfway there.' :
+    'Complete all exercises to finish the module.';
+}
+
+function showBadge(id, text, color) {
+  const b = document.getElementById(id + '-badge');
+  if (!b) return;
+  b.textContent = text;
+  b.style.background = color;
+  b.classList.add('show');
+}
+
+function showFP(id, cls, html) {
+  const fp = document.getElementById(id + '-fp');
+  fp.className = 'fp show ' + cls;
+  fp.innerHTML = html;
+  fp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function scrollToFirst() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+// ─── Exercise 8: Severity vs Priority ────────────────────────────────────────
+// [sev, pri, note]
+const EX8_ANS = [
+  ['Critical','Critical','All users blocked at checkout — maximum severity and urgency.'],
+  ['Low','Low','Cosmetic/accessibility issue with no functional impact. Fix when convenient.'],
+  ['Medium','Low','Broken link is a real defect (Medium severity) but the tiny audience makes it Low priority.'],
+  ['High','Medium','High severity (crash) but the workaround reduces business urgency to Medium.'],
+  ['Low','High','Key lesson: Low severity, High priority. Cosmetic bug but the demo context makes it urgent to fix NOW.'],
+  ['Critical','Critical','Security vulnerability. Even if not exploited yet, it is critical to fix immediately.'],
+];
+
+function checkEx8() {
+  const labels = [
+    'Place Order 500 error',
+    'Logo alt text',
+    'Broken privacy link (low traffic)',
+    'Admin crash with workaround',
+    'Currency "USD" vs "$" before demo',
+    'Plain-text passwords',
+  ];
+  let correct = 0, rows = '';
+  EX8_ANS.forEach(([sev, pri, note], i) => {
+    const n = i + 1;
+    const uSev = document.getElementById('ex8s' + n).value;
+    const uPri = document.getElementById('ex8p' + n).value;
+    const sOk = uSev === sev; const pOk = uPri === pri;
+    if (sOk && pOk) correct++;
+    rows += `<li><span class="badge ${(sOk&&pOk)?'bc':'bw'}">${(sOk&&pOk)?'✓':'✗'}</span>
+      <span><strong>${labels[i]}</strong>: Severity=<strong>${sev}</strong>, Priority=<strong>${pri}</strong>. ${note}</span></li>`;
+  });
+  const cls = correct===6?'fp-ok':correct>=4?'fp-warn':'fp-info';
+  showFP('ex8', cls, `<h4>${correct===6?'✅ All correct!':correct+'/6 correct'}</h4>
+<p style="margin-bottom:.5rem;font-size:.82rem">Remember: Severity describes the defect's impact on the system. Priority describes business urgency. They can differ significantly.</p>
+<ul class="ans-list">${rows}</ul>`);
+  showBadge('ex8', correct+'/6', correct===6?'rgba(39,174,96,.85)':'rgba(243,156,18,.85)');
+  markSubmitted('ex8');
+}
+
+function resetEx8() {
+  for(let i=1;i<=6;i++){document.getElementById('ex8s'+i).value='';document.getElementById('ex8p'+i).value='';}
+  document.getElementById('ex8-fp').className='fp';
+}
+
+// ─── Exercise 9: Test Types ────────────────────────────────────────────────────
+const EX9_ANS = {
+  ex9q1:'Smoke Testing', ex9q2:'Regression Testing', ex9q3:'Exploratory Testing',
+  ex9q4:'Performance Testing', ex9q5:'Security Testing', ex9q6:'Usability Testing'
+};
+const EX9_EXP = {
+  ex9q1:'SMOKE TESTING — a lightweight check that the build is stable enough to test before investing in the full suite.',
+  ex9q2:'REGRESSION TESTING — re-running existing tests after a change to detect unintended side effects.',
+  ex9q3:'EXPLORATORY TESTING — unscripted, experience-driven testing where the tester designs tests on the fly.',
+  ex9q4:'PERFORMANCE TESTING — measuring system behaviour under load to verify SLAs and stability.',
+  ex9q5:'SECURITY TESTING — attempting to bypass access controls, testing for authorization vulnerabilities.',
+  ex9q6:'USABILITY TESTING — observing real users to identify friction, confusion, and UX problems.',
+};
+
+function checkEx9() {
+  let correct = 0;
+  Object.keys(EX9_ANS).forEach(qid => {
+    const n = qid.slice(-1);
+    const sel = document.getElementById(qid);
+    const qi = document.getElementById('ex9-q' + n);
+    qi.querySelector('.q-expl') && qi.querySelector('.q-expl').remove();
+    sel.classList.remove('is-correct','is-wrong');
+    qi.classList.remove('ok','bad');
+    if (sel.value === EX9_ANS[qid]) {
+      correct++; sel.className='is-correct'; qi.className='qi ok';
+      addExpl('ex9-q' + n, EX9_EXP[qid], true);
+    } else if (sel.value) {
+      sel.className='is-wrong'; qi.className='qi bad';
+      addExpl('ex9-q' + n, 'Correct: <strong>' + EX9_ANS[qid] + '</strong>. ' + EX9_EXP[qid], false);
+    }
+  });
+  const cls = correct===6?'fp-ok':correct>=4?'fp-warn':'fp-info';
+  showFP('ex9', cls, `<h4>${correct===6?'✅ All correct!':correct+'/6 correct'}</h4><p style="font-size:.85rem">Explanations shown under each question above.</p>`);
+  showBadge('ex9', correct+'/6', correct===6?'rgba(39,174,96,.85)':'rgba(243,156,18,.85)');
+  markSubmitted('ex9');
+}
+
+function resetEx9() {
+  for(let i=1;i<=6;i++){const s=document.getElementById('ex9q'+i);s.value='';s.className='';document.getElementById('ex9-q'+i).className='qi';}
+  clearExpl('ex9');
+  document.getElementById('ex9-fp').className='fp';
+}
+
+// ─── Exercise 10: Bug Report ──────────────────────────────────────────────────
+function checkEx10() {
+  const fields = ['ex10-title','ex10-steps','ex10-expected','ex10-actual','ex10-justify','ex10-env'];
+  const empty = fields.filter(id => !document.getElementById(id).value.trim());
+  const sev = document.getElementById('ex10-sev').value;
+  const pri = document.getElementById('ex10-pri').value;
+  if (empty.length || !sev || !pri) {
+    showFP('ex10','fp-warn','<h4>⚠️ Please fill in all fields before submitting.</h4>'); return;
+  }
+  showFP('ex10','fp-info',`<h4>📋 Model Bug Report</h4>
+<ul class="ans-list">
+<li><span class="badge ba">Title</span><span><strong>[Cart] Adding filtered/discounted item to cart uses original price instead of filtered price</strong></span></li>
+<li><span class="badge ba">Steps</span><span>1. Log in as a registered user.<br>2. Navigate to the Products page.<br>3. Apply a price filter: $10–$50.<br>4. Click "Add to Cart" on any item shown in the filtered results.<br>5. Open the cart and view the item price.</span></li>
+<li><span class="badge ba">Expected</span><span>The cart should display the item at the price shown in the filtered results (the discounted/filtered price).</span></li>
+<li><span class="badge ba">Actual</span><span>The cart displays the item at its original full price, ignoring the filtered price.</span></li>
+<li><span class="badge ba">Sev / Pri</span><span><strong>Severity: High</strong> — a core checkout feature produces incorrect pricing. <strong>Priority: High</strong> — incorrect pricing directly affects revenue and customer trust.</span></li>
+<li><span class="badge ba">Env</span><span>Browser: Chrome 120 | OS: Windows 11 | Environment: QA | Build: QA-v2.4 | Reproducible: 100% (every filtered item tested). Workaround: none — users have no way to add the discounted price to cart.</span></li>
+</ul>`);
+  showBadge('ex10','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex10');
+}
+
+function resetEx10() {
+  ['ex10-title','ex10-steps','ex10-expected','ex10-actual','ex10-justify','ex10-env'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ex10-sev').value=''; document.getElementById('ex10-pri').value='';
+  document.getElementById('ex10-fp').className='fp';
+}
+
+// ─── Exercise 11: Equivalence Partitioning ───────────────────────────────────
+function checkEx11() {
+  const ids = ['ex11-v1','ex11-i1','ex11-i2','ex11-i3','ex11-i4','ex11-b1','ex11-b2','ex11-b3','ex11-b4'];
+  const empty = ids.filter(id => !document.getElementById(id).value.trim());
+  if (empty.length > 2) {
+    showFP('ex11','fp-warn','<h4>⚠️ Please fill in all fields (at least the class descriptions and boundaries).</h4>'); return;
+  }
+  showFP('ex11','fp-info',`<h4>📋 Model Answer</h4>
+<p style="font-weight:600;margin-bottom:.4rem">Equivalence Classes:</p>
+<ul class="ans-list">
+<li><span class="badge bc">✓ Valid</span><span>8–20 chars, contains ≥1 uppercase, ≥1 number, no spaces. Example: <code>Password1</code></span></li>
+<li><span class="badge bw">✗ Invalid 1</span><span>Too short (&lt;8 chars). Example: <code>Pass1</code> (5 chars)</span></li>
+<li><span class="badge bw">✗ Invalid 2</span><span>Too long (&gt;20 chars). Example: <code>Password1ExampleTooLong</code> (22 chars)</span></li>
+<li><span class="badge bw">✗ Invalid 3</span><span>No uppercase letter. Example: <code>password1</code></span></li>
+<li><span class="badge bw">✗ Invalid 4</span><span>No number. Example: <code>Password</code></span></li>
+<li><span class="badge bw">✗ Invalid 5 (bonus)</span><span>Contains a space. Example: <code>Pass word1</code></span></li>
+</ul>
+<p style="font-weight:600;margin:.7rem 0 .4rem">Boundary Values (length rule):</p>
+<ul class="ans-list">
+<li><span class="badge bw">✗</span><span>7 characters — INVALID (one below lower bound). Example: <code>Pass1aB</code></span></li>
+<li><span class="badge bc">✓</span><span>8 characters — VALID (lower bound). Example: <code>Pass1aBc</code></span></li>
+<li><span class="badge bc">✓</span><span>20 characters — VALID (upper bound). Example: <code>Password1ExampleTest</code></span></li>
+<li><span class="badge bw">✗</span><span>21 characters — INVALID (one above upper bound). Example: <code>Password1ExampleTest1</code></span></li>
+</ul>
+<p style="margin-top:.6rem;font-size:.82rem;color:var(--muted)">Tip: always test both sides of every boundary — one value inside (valid) and one outside (invalid).</p>`);
+  showBadge('ex11','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex11');
+}
+
+function resetEx11() {
+  ['ex11-v1','ex11-v1ex','ex11-i1','ex11-i1ex','ex11-i2','ex11-i2ex','ex11-i3','ex11-i3ex','ex11-i4','ex11-i4ex','ex11-b1','ex11-b2','ex11-b3','ex11-b4'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ex11-fp').className='fp';
+}
+
+// ─── Exercise 12: Missing Test Cases ─────────────────────────────────────────
+function checkEx12() {
+  const v = document.getElementById('ex12-answer').value.trim();
+  if (!v) { showFP('ex12','fp-warn','<h4>⚠️ Please write your answer before submitting.</h4>'); return; }
+  showFP('ex12','fp-info',`<h4>📋 Missing Test Cases — Model Answer</h4>
+<ul class="ans-list">
+<li><span class="badge ba">4</span><span>Login with <strong>empty password field</strong> → The same validation as empty email should apply.</span></li>
+<li><span class="badge ba">5</span><span>Login with <strong>both fields empty</strong> → Should show both validation errors simultaneously.</span></li>
+<li><span class="badge ba">6</span><span>Login with a <strong>deactivated or locked account</strong> → Should show a specific message (not just "wrong password").</span></li>
+<li><span class="badge ba">7</span><span>Login with a <strong>non-existent email</strong> → Should not reveal whether the email exists (security: user enumeration).</span></li>
+<li><span class="badge ba">8</span><span><strong>Account lockout after N failed attempts</strong> → Prevents brute-force attacks. How many retries before lockout?</span></li>
+<li><span class="badge ba">9</span><span>Login with <strong>SQL injection in the email field</strong> → e.g. <code>' OR 1=1 --</code> → should be rejected, not bypass auth.</span></li>
+<li><span class="badge ba">10</span><span>Login with a <strong>very long email/password</strong> (e.g. 1000 chars) → boundary/stress on input validation.</span></li>
+<li><span class="badge ba">11</span><span><strong>"Forgot password" link</strong> visible and functional from the login page.</span></li>
+<li><span class="badge ba">12</span><span>Successful login <strong>redirects to the correct page</strong> (dashboard, or the page the user was trying to reach).</span></li>
+<li><span class="badge ba">13</span><span>Login is <strong>case-insensitive for email</strong> (e.g. User@Example.com = user@example.com).</span></li>
+</ul>
+<p style="margin-top:.5rem;font-size:.82rem;color:var(--muted)">Rule of thumb: for every happy path, ask "what if it's empty?", "what if it's wrong?", "what if a bad actor sends it?", and "what happens at the edges?"</p>`);
+  showBadge('ex12','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex12');
+}
+
+function resetEx12() {
+  document.getElementById('ex12-answer').value='';
+  document.getElementById('ex12-fp').className='fp';
+}
+
+// ─── Exercise 13: Entry & Exit Criteria ───────────────────────────────────────
+function checkEx13() {
+  const e = document.getElementById('ex13-entry').value.trim();
+  const x = document.getElementById('ex13-exit').value.trim();
+  if (!e || !x) { showFP('ex13','fp-warn','<h4>⚠️ Please fill in both fields.</h4>'); return; }
+  showFP('ex13','fp-info',`<h4>📋 Model Answer</h4>
+<p style="font-weight:600;margin-bottom:.4rem">Entry Criteria (before QA starts):</p>
+<ul>
+<li>Feature is deployed and accessible in the QA environment.</li>
+<li>All user stories have been reviewed and accepted criteria are defined.</li>
+<li>Test cases for the Wishlist feature are written and peer-reviewed.</li>
+<li>Test data is available: at least 2 test accounts (one with items, one empty wishlist).</li>
+<li>No blocking bugs from the previous sprint remain unresolved.</li>
+<li>The developer has completed smoke testing on the local build.</li>
+</ul>
+<p style="font-weight:600;margin:.7rem 0 .4rem">Exit Criteria (before QA signs off):</p>
+<ul>
+<li>100% of planned test cases have been executed.</li>
+<li>Zero open Critical or High severity bugs.</li>
+<li>All Medium bugs are triaged and accepted by the Product Owner (or deferred with a ticket).</li>
+<li>Regression suite has been run and shows no new failures.</li>
+<li>Test summary report is written and shared with stakeholders.</li>
+<li>QA Lead has approved the go / no-go decision.</li>
+</ul>`);
+  showBadge('ex13','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex13');
+}
+
+function resetEx13() {
+  document.getElementById('ex13-entry').value=''; document.getElementById('ex13-exit').value='';
+  document.getElementById('ex13-fp').className='fp';
+}
+
+// ─── Exercise 14: Sprint Test Plan ───────────────────────────────────────────
+function checkEx14() {
+  const fields = ['ex14-obj','ex14-scope','ex14-approach','ex14-risks','ex14-schedule'];
+  const empty = fields.filter(id => !document.getElementById(id).value.trim());
+  if (empty.length) { showFP('ex14','fp-warn','<h4>⚠️ Please complete all sections before submitting.</h4>'); return; }
+  showFP('ex14','fp-info',`<h4>📋 Model Sprint Test Plan — Sprint 15: Wishlist</h4>
+<p><strong>Objectives:</strong></p>
+<ul>
+<li>Verify that users can add up to 20 items to a wishlist and receive an error beyond the limit.</li>
+<li>Verify that items can be removed from the wishlist correctly.</li>
+<li>Confirm the wishlist persists across sessions (login, logout, login again).</li>
+<li>Verify that the share link generates a public URL showing the wishlist correctly.</li>
+<li>Confirm guest users cannot access the wishlist and are prompted to log in.</li>
+</ul>
+<p style="margin-top:.6rem"><strong>Scope:</strong><br>
+IN: Add/remove items, 20-item limit, persistence, share link, guest user restriction, mobile &amp; desktop.<br>
+OUT: Payment flow, product recommendations, admin wishlist management, email wishlist sharing.</p>
+<p style="margin-top:.6rem"><strong>Test Approach:</strong><br>
+Functional testing of all acceptance criteria. Exploratory testing around edge cases (limit boundary, invalid share links). Cross-browser check on Chrome, Firefox, Safari. Automation: add and remove item flows to be added to regression suite.</p>
+<p style="margin-top:.6rem"><strong>Risks:</strong><br>
+Risk 1: Share link exposes private user data (e.g., if no auth check). Mitigation: include a security check — access share link without logging in and verify only public info is visible.<br>
+Risk 2: Late delivery from development. Mitigation: start writing test cases on Day 1 using the user stories; don't wait for the build.</p>
+<p style="margin-top:.6rem"><strong>Schedule (4 QA days):</strong><br>
+Day 1: Review user stories, write and peer-review test cases, set up test data.<br>
+Day 2: Execute functional test cases (add/remove/limit/persistence).<br>
+Day 3: Exploratory testing, share link, cross-browser, log all defects.<br>
+Day 4: Retest fixes, run regression suite, write test summary report, sign-off.</p>`);
+  showBadge('ex14','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex14');
+}
+
+function resetEx14() {
+  ['ex14-obj','ex14-scope','ex14-approach','ex14-risks','ex14-schedule'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ex14-fp').className='fp';
+}
+
+// ─── Inline explanation helpers ───────────────────────────────────────────────
+function addExpl(qiId, text, isOk) {
+  const qi = document.getElementById(qiId);
+  if (!qi) return;
+  const old = qi.querySelector('.q-expl');
+  if (old) old.remove();
+  const d = document.createElement('div');
+  d.className = 'q-expl ' + (isOk ? 'ok' : 'wrong');
+  d.innerHTML = '<strong>' + (isOk ? '✓ Correct:' : '💡 Explanation:') + '</strong> ' + text;
+  qi.appendChild(d);
+}
+
+function clearExpl(sectionId) {
+  document.querySelectorAll('#' + sectionId + ' .q-expl').forEach(el => el.remove());
+}
+
+// ─── Exercise 1: Plan vs Strategy ────────────────────────────────────────────
+const EX1 = [
+  { name:'ex1q1', id:'ex1-q1', ans:'S', exp:'A risk-based testing approach applied to <em>all software products organisation-wide</em> is a strategic decision — Test Strategy.' },
+  { name:'ex1q2', id:'ex1-q2', ans:'P', exp:'Naming a specific tester (Ana), specific modules, and specific dates (April 5–10) is project-level detail — Test Plan.' },
+  { name:'ex1q3', id:'ex1-q3', ans:'S', exp:'A quality gate that applies to <em>every release across the organisation</em> is a policy decision — Test Strategy.' },
+  { name:'ex1q4', id:'ex1-q4', ans:'P', exp:'Specific test counts (45 automated + 20 manual) for a specific sprint and feature (Sprint 22 / Checkout) — Test Plan detail.' },
+  { name:'ex1q5', id:'ex1-q5', ans:'S', exp:'A security standard mandated for <em>all web applications in the portfolio</em> is an organisation-wide rule — Test Strategy.' },
+  { name:'ex1q6', id:'ex1-q6', ans:'P', exp:'Defining what is out of scope for <em>this release</em> is always a Test Plan decision — scope varies per project/release.' },
+  { name:'ex1q7', id:'ex1-q7', ans:'S', exp:'A severity classification scheme applied <em>across all projects in the organisation</em> is a standards decision — Test Strategy.' },
+  { name:'ex1q8', id:'ex1-q8', ans:'P', exp:'Specific tester (Bram), tool (JMeter), feature (Checkout redesign), and deadline (Dec 15) — all Plan-level specifics.' },
+];
+
+function checkEx1() {
+  let correct = 0;
+  EX1.forEach(q => {
+    const sel = document.querySelector(`input[name="${q.name}"]:checked`);
+    const qi = document.getElementById(q.id);
+    qi.querySelectorAll('label').forEach(l => l.classList.remove('is-correct','is-wrong','show-correct'));
+    const old = qi.querySelector('.q-expl'); if (old) old.remove();
+    if (sel) {
+      const isOk = sel.value === q.ans;
+      if (isOk) {
+        correct++;
+        qi.classList.add('ok');
+        sel.closest('label').classList.add('is-correct');
+      } else {
+        qi.classList.add('bad');
+        sel.closest('label').classList.add('is-wrong');
+        qi.querySelectorAll('label').forEach(l => { if (l.querySelector('input').value === q.ans) l.classList.add('show-correct'); });
+      }
+      addExpl(q.id, q.exp, isOk);
+    } else {
+      qi.className = 'qi';
+    }
+  });
+  const cls = correct === 8 ? 'fp-ok' : correct >= 6 ? 'fp-warn' : 'fp-info';
+  showFP('ex1', cls, `<h4>${correct === 8 ? '✅ Perfect score!' : correct + '/8 correct'}</h4><p style="font-size:.85rem">Explanations shown under each question above.</p>`);
+  showBadge('ex1', correct + '/8', correct === 8 ? 'rgba(39,174,96,.85)' : 'rgba(243,156,18,.85)');
+  markSubmitted('ex1');
+}
+
+function resetEx1() {
+  EX1.forEach(q => {
+    document.querySelectorAll(`input[name="${q.name}"]`).forEach(i => i.checked = false);
+    const qi = document.getElementById(q.id);
+    qi.className = 'qi';
+    qi.querySelectorAll('label').forEach(l => l.className = '');
+  });
+  clearExpl('ex1');
+  document.getElementById('ex1-fp').className = 'fp';
+}
+
+// ─── Exercise 2: Test Levels ──────────────────────────────────────────────────
+const EX2_ANS = { ex2q1:'Unit', ex2q2:'Integration', ex2q3:'System', ex2q4:'Acceptance (UAT)', ex2q5:'Integration', ex2q6:'Unit' };
+const EX2_EXP = {
+  ex2q1: 'UNIT — testing a single function (login validation) in isolation.',
+  ex2q2: 'INTEGRATION — testing the interaction between the registration module and the email service.',
+  ex2q3: 'SYSTEM — a full end-to-end flow covering multiple modules together.',
+  ex2q4: 'ACCEPTANCE (UAT) — a business stakeholder verifying a business requirement.',
+  ex2q5: 'INTEGRATION — testing the contract between the frontend component and the search API.',
+  ex2q6: 'UNIT — testing a single calculation function (discount logic) in isolation.',
+};
+
+function checkEx2() {
+  let correct = 0;
+  Object.keys(EX2_ANS).forEach(qid => {
+    const n = qid.slice(-1);
+    const sel = document.getElementById(qid);
+    const qiEl = document.getElementById('ex2-q' + n);
+    qiEl.querySelector('.q-expl') && qiEl.querySelector('.q-expl').remove();
+    sel.classList.remove('is-correct','is-wrong');
+    qiEl.classList.remove('ok','bad');
+    if (sel.value === EX2_ANS[qid]) {
+      correct++; sel.classList.add('is-correct'); qiEl.classList.add('ok');
+      addExpl('ex2-q' + n, EX2_EXP[qid], true);
+    } else if (sel.value) {
+      sel.classList.add('is-wrong'); qiEl.classList.add('bad');
+      addExpl('ex2-q' + n, EX2_EXP[qid], false);
+    }
+  });
+  const cls = correct === 6 ? 'fp-ok' : correct >= 4 ? 'fp-warn' : 'fp-info';
+  showFP('ex2', cls, `<h4>${correct === 6 ? '✅ All correct!' : correct + '/6 correct'}</h4><p style="font-size:.85rem">Explanations shown under each question above.</p>`);
+  showBadge('ex2', correct + '/6', correct === 6 ? 'rgba(39,174,96,.85)' : 'rgba(243,156,18,.85)');
+  markSubmitted('ex2');
+}
+
+function resetEx2() {
+  for (let i=1;i<=6;i++) { const s=document.getElementById('ex2q'+i); s.value=''; s.className=''; document.getElementById('ex2-q'+i).className='qi'; }
+  clearExpl('ex2');
+  document.getElementById('ex2-fp').className='fp';
+}
+
+// ─── Exercise 3: Risk Scoring ─────────────────────────────────────────────────
+const EX3_SUGGESTED = [
+  { l:4, i:5, score:20, pri:'High',   note:'Payment failures are high-impact and frequent under load.' },
+  { l:3, i:2, score:6,  pri:'Low',    note:'Cosmetic/minor data issue — not business critical.' },
+  { l:2, i:5, score:10, pri:'Medium', note:'Security vulnerability. Likelihood may be low but impact is critical (could argue High).' },
+  { l:4, i:3, score:12, pri:'Medium', note:'Performance SLA breach — users notice but not catastrophic.' },
+  { l:3, i:3, score:9,  pri:'Low',    note:'Security edge case — longer expiry is bad practice but low immediate impact.' },
+  { l:4, i:2, score:8,  pri:'Low',    note:'UI/cosmetic issue. Visible but low business impact.' },
+];
+
+// Auto-calc scores on input
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.risk-l, .risk-i').forEach(inp => {
+    inp.addEventListener('input', function() {
+      const row = this.getAttribute('data-row');
+      const l = parseFloat(document.querySelector(`.risk-l[data-row="${row}"]`).value) || 0;
+      const i = parseFloat(document.querySelector(`.risk-i[data-row="${row}"]`).value) || 0;
+      const s = l * i;
+      const el = document.getElementById('score' + row);
+      el.textContent = s || '—';
+      el.style.color = s === 0 ? 'var(--muted)' : s <= 9 ? 'var(--green)' : s <= 16 ? 'var(--yellow)' : 'var(--red)';
+    });
+  });
+
+  // Build RACI table
+  buildRaciTable();
+});
+
+function checkEx3() {
+  const names = ['Payment crashes','Profile pic wrong','Admin no auth','Search SLA','Password reset expiry','Banner on Safari'];
+  let rows = '';
+  EX3_SUGGESTED.forEach((s, i) => {
+    const rowIdx = i + 1;
+    const l = parseFloat(document.querySelector(`.risk-l[data-row="${rowIdx}"]`).value) || 0;
+    const imp = parseFloat(document.querySelector(`.risk-i[data-row="${rowIdx}"]`).value) || 0;
+    const userPri = document.getElementById('pri' + rowIdx).value;
+    const hasInput = l > 0 && imp > 0 && userPri;
+    const priMatch = userPri === s.pri;
+    rows += `<li><span class="badge ba">${rowIdx}</span>
+      <span><strong>${names[i]}</strong>: Suggested L=${s.l}, I=${s.i}, Score=${s.score}, Priority=<strong>${s.pri}</strong>.
+      ${s.note}${hasInput ? (priMatch ? ' <span style="color:var(--green)">✓ Your priority matches.</span>' : ` <span style="color:var(--red)">Your priority: ${userPri}.</span>`) : ''}</span></li>`;
+  });
+  showFP('ex3', 'fp-info', `<h4>📊 Suggested Answers</h4><p style="margin-bottom:.6rem;font-size:.82rem">Risk scoring is subjective — the table below shows one valid interpretation. Discuss any differences with your team.</p><ul class="ans-list">${rows}</ul>`);
+  showBadge('ex3', 'Reviewed', 'rgba(0,151,167,.85)');
+  markSubmitted('ex3');
+}
+
+function resetEx3() {
+  document.querySelectorAll('.risk-l,.risk-i').forEach(i => i.value = '');
+  for (let i=1;i<=6;i++) { document.getElementById('score'+i).textContent='—'; document.getElementById('score'+i).style.color=''; document.getElementById('pri'+i).value=''; }
+  document.getElementById('ex3-fp').className='fp';
+}
+
+// ─── Exercise 4: Test Plan Puzzle ─────────────────────────────────────────────
+const EX4_ANS = {
+  ex4q1:'Objectives', ex4q2:'Test Environments', ex4q3:'Test Approach',
+  ex4q4:'Risk Analysis', ex4q5:'Deliverables', ex4q6:'Test Schedule',
+  ex4q7:'Scope', ex4q8:'Roles & Responsibilities'
+};
+
+const EX4_EXP = {
+  ex4q1: 'OBJECTIVES — states what the testing aims to achieve (verify, validate, ensure).',
+  ex4q2: 'TEST ENVIRONMENTS — describes the hardware/software/config stack where tests run.',
+  ex4q3: 'TEST APPROACH — explains the testing techniques and methods that will be used.',
+  ex4q4: 'RISK ANALYSIS — identifies what could go wrong and how testing addresses those risks.',
+  ex4q5: 'DELIVERABLES — lists the outputs the QA team will produce (reports, logs, sign-off).',
+  ex4q6: 'TEST SCHEDULE — maps testing activities to dates and milestones.',
+  ex4q7: 'SCOPE — defines what is in and out of scope for this test effort.',
+  ex4q8: 'ROLES & RESPONSIBILITIES — assigns who is accountable for each testing activity.',
+};
+
+function checkEx4() {
+  let correct = 0;
+  Object.keys(EX4_ANS).forEach(qid => {
+    const n = qid.slice(-1);
+    const sel = document.getElementById(qid);
+    const qi = document.getElementById('ex4-q' + n);
+    qi.querySelector('.q-expl') && qi.querySelector('.q-expl').remove();
+    if (sel.value === EX4_ANS[qid]) {
+      correct++; sel.className='is-correct'; qi.className='qi ok';
+      addExpl('ex4-q' + n, '→ <strong>' + EX4_ANS[qid] + '</strong>. ' + EX4_EXP[qid], true);
+    } else if (sel.value) {
+      sel.className='is-wrong'; qi.className='qi bad';
+      addExpl('ex4-q' + n, 'Correct answer: <strong>' + EX4_ANS[qid] + '</strong>. ' + EX4_EXP[qid], false);
+    }
+  });
+  const cls = correct === 8 ? 'fp-ok' : correct >= 5 ? 'fp-warn' : 'fp-info';
+  showFP('ex4', cls, `<h4>${correct === 8 ? '✅ Perfect!' : correct + '/8 correct'}</h4><p style="font-size:.85rem">Explanations shown under each question above.</p>`);
+  showBadge('ex4', correct + '/8', correct === 8 ? 'rgba(39,174,96,.85)' : 'rgba(243,156,18,.85)');
+  markSubmitted('ex4');
+}
+
+function resetEx4() {
+  for(let i=1;i<=8;i++) { const s=document.getElementById('ex4q'+i); s.value=''; s.className=''; document.getElementById('ex4-q'+i).className='qi'; }
+  clearExpl('ex4');
+  document.getElementById('ex4-fp').className='fp';
+}
+
+// ─── Exercise 5: RACI Builder ─────────────────────────────────────────────────
+const RACI_TASKS = [
+  'Define test strategy for the new feature',
+  'Write test cases for user registration',
+  'Execute automated regression tests',
+  'Report a critical bug found in production',
+  'Sign off on go / no-go before release',
+];
+const RACI_ROLES = ['QA Lead','QA Engineer','Developer','PM','Product Owner'];
+const RACI_ROLE_IDS = ['ql','qe','dev','pm','po'];
+
+// Suggested model answers (for display after submit)
+const RACI_MODEL = [
+  ['RA','C','C','I','C'],
+  ['A','R','C','I','C'],
+  ['A','R','I','I','I'],
+  ['A','R','C','C','I'],
+  ['C','I','I','C','A'],
+];
+
+function buildRaciTable() {
+  const tbody = document.getElementById('raci-body');
+  if (!tbody) return;
+  RACI_TASKS.forEach((task, ti) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${task}</td>` +
+      RACI_ROLE_IDS.map(rid =>
+        `<td class="center"><select id="raci_t${ti}_${rid}"><option value="">—</option><option>R</option><option>A</option><option>C</option><option>I</option><option>RA</option></select></td>`
+      ).join('') +
+      `<td><span id="raci-err-${ti}" style="font-size:.72rem;color:var(--red)"></span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function checkEx5() {
+  let errors = [], valid = true;
+  RACI_TASKS.forEach((task, ti) => {
+    let aCount = 0, rCount = 0;
+    RACI_ROLE_IDS.forEach(rid => {
+      const v = document.getElementById(`raci_t${ti}_${rid}`).value;
+      if (v === 'A' || v === 'RA') aCount++;
+      if (v === 'R' || v === 'RA') rCount++;
+    });
+    const errEl = document.getElementById('raci-err-' + ti);
+    if (aCount !== 1) { errors.push(`Row ${ti+1} ("${task.slice(0,25)}…"): has ${aCount} A — must be exactly 1`); valid = false; errEl.textContent = aCount===0?'No A':'Multiple A'; }
+    else if (rCount === 0) { errors.push(`Row ${ti+1} ("${task.slice(0,25)}…"): no R assigned`); valid = false; errEl.textContent = 'No R'; }
+    else { errEl.textContent = ''; }
+  });
+
+  let modelHtml = '<p style="margin:.6rem 0 .3rem"><strong>Model answer (one valid option):</strong></p><table class="tbl"><thead><tr><th>Task</th>' +
+    RACI_ROLES.map(r=>`<th class="center" style="font-size:.75rem">${r}</th>`).join('') + '</tr></thead><tbody>' +
+    RACI_TASKS.map((t,i) => `<tr><td style="font-size:.78rem">${t}</td>` + RACI_MODEL[i].map(v=>`<td class="center" style="font-weight:700;color:var(--navy)">${v}</td>`).join('') + '</tr>').join('') +
+    '</tbody></table>';
+
+  if (valid) {
+    showFP('ex5', 'fp-ok', `<h4>✅ RACI structure is valid!</h4><p>All tasks have exactly one Accountable person and at least one Responsible. Compare with the model below.</p>${modelHtml}`);
+    showBadge('ex5', 'Valid ✓', 'rgba(39,174,96,.85)');
+  } else {
+    showFP('ex5', 'fp-warn', `<h4>⚠️ ${errors.length} issue${errors.length>1?'s':''} found</h4><ul>${errors.map(e=>`<li>${e}</li>`).join('')}</ul>${modelHtml}`);
+    showBadge('ex5', 'Fix needed', 'rgba(192,57,43,.85)');
+  }
+  markSubmitted('ex5');
+}
+
+function resetEx5() {
+  RACI_TASKS.forEach((_,ti) => { RACI_ROLE_IDS.forEach(rid => { document.getElementById(`raci_t${ti}_${rid}`).value=''; }); document.getElementById('raci-err-'+ti).textContent=''; });
+  document.getElementById('ex5-fp').className='fp';
+}
+
+// ─── Exercise 6: E-commerce Challenge ────────────────────────────────────────
+function checkEx6() {
+  const a1 = document.getElementById('ex6a1').value.trim();
+  const a2 = document.getElementById('ex6a2').value.trim();
+  const a3 = document.getElementById('ex6a3').value.trim();
+  if (!a1 || !a2 || !a3) {
+    showFP('ex6','fp-warn','<h4>⚠️ Please fill in all three fields before submitting.</h4>');
+    return;
+  }
+  showFP('ex6','fp-info',`<h4>📋 Model Answer</h4>
+<p><strong>Test Objectives:</strong></p>
+<ul>
+  <li>Verify that the checkout process completes successfully for all supported payment methods.</li>
+  <li>Ensure the system handles peak load of at least 10,000 concurrent users without degradation.</li>
+  <li>Validate that user authentication is secure — no unauthorized access to accounts or order data.</li>
+  <li>Confirm product search and filtering return accurate, up-to-date results.</li>
+  <li>Verify order confirmation emails are sent and contain correct order details.</li>
+</ul>
+<p style="margin-top:.7rem"><strong>In Scope:</strong> user registration & login, product browsing/search/filter, cart functionality, checkout (card, PayPal), order tracking, third-party shipping integration, mobile (iOS/Android) & desktop browsers.</p>
+<p style="margin-top:.4rem"><strong>Out of Scope:</strong> admin/back-office portal (separate release), email marketing campaigns, warehouse management system, returns/refunds flow (Phase 2).</p>
+<p style="margin-top:.7rem"><strong>Clarification Questions:</strong></p>
+<ul>
+  <li>What is the expected peak concurrent user count and target response time SLA?</li>
+  <li>Are there any known third-party API limitations or sandbox constraints for payment testing?</li>
+  <li>What browsers and OS versions must be officially supported?</li>
+  <li>Is test data (accounts, products, addresses) already available or does QA need to create it?</li>
+</ul>`);
+  showBadge('ex6','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex6');
+}
+
+function resetEx6() {
+  ['ex6a1','ex6a2','ex6a3'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('ex6-fp').className='fp';
+}
+
+// ─── Exercise 7: Apply RBT ────────────────────────────────────────────────────
+const SUGGESTED_RANKS = [2, 4, 6, 5, 7, 3, 8, 1]; // indexed by row
+
+function checkEx7() {
+  const j1 = document.getElementById('ex7just1').value.trim();
+  const j2 = document.getElementById('ex7just2').value.trim();
+  const j3 = document.getElementById('ex7just3').value.trim();
+  if (!j1 || !j2 || !j3) {
+    showFP('ex7','fp-warn','<h4>⚠️ Please complete all three justification fields.</h4>'); return;
+  }
+  // Reveal suggested ranks
+  SUGGESTED_RANKS.forEach((r,i) => { const el = document.getElementById('srank'+(i+1)); el.textContent=r; el.style.color='var(--teal)'; el.style.fontWeight='700'; });
+
+  showFP('ex7','fp-info',`<h4>📋 Model Ranking &amp; Justifications</h4>
+<table class="tbl" style="margin-bottom:.8rem">
+<thead><tr><th>Rank</th><th>Area</th><th>Key Reason</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Insurance API integration</td><td>External dependency — failures block core workflows; hard to mock reliably.</td></tr>
+<tr><td>2</td><td>Patient login &amp; authentication</td><td>Security + privacy — unauthorized access to health data = legal/compliance risk.</td></tr>
+<tr><td>3</td><td>Payments for consultations</td><td>Financial transactions — errors cause direct monetary loss and erode trust.</td></tr>
+<tr><td>4</td><td>Appointment booking &amp; cancellation</td><td>Core feature — if broken, the entire product fails its primary purpose.</td></tr>
+<tr><td>5</td><td>Email reminders</td><td>Important UX but failure doesn't block core workflow; easier to retest quickly.</td></tr>
+<tr><td>6</td><td>Doctor schedule management</td><td>Admin-only feature — limited user exposure; schedule errors have downstream impact.</td></tr>
+<tr><td>7</td><td>Prescription history (read-only)</td><td>Read-only display — no write risk; stable data with low change frequency.</td></tr>
+<tr><td>8</td><td>Branding &amp; UI styling</td><td>Cosmetic only — zero functional risk; test last or deprioritize entirely.</td></tr>
+</tbody></table>
+<p><strong>Testing approach for top 3:</strong></p>
+<ul>
+<li><strong>Insurance API</strong>: Integration testing (contract + error handling), both manual and automated. Test early using mocks, then with real sandbox before release.</li>
+<li><strong>Patient login</strong>: Security testing (auth bypass, session management, brute force) + functional. Automate happy path; manual for security edge cases. Test in every sprint.</li>
+<li><strong>Payments</strong>: Functional + security testing. Automate regression for all payment flows. Test before every release; never skip in CI.</li>
+</ul>`);
+  showBadge('ex7','Submitted','rgba(0,151,167,.85)');
+  markSubmitted('ex7');
+}
+
+function resetEx7() {
+  for(let i=1;i<=8;i++) { document.getElementById('rank'+i).value=''; document.getElementById('srank'+i).textContent='—'; document.getElementById('srank'+i).style.color='var(--muted)'; document.getElementById('srank'+i).style.fontWeight=''; }
+  ['ex7just1','ex7just2','ex7just3'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('ex7-fp').className='fp';
+}
+</script>
+</body>
+</html>
